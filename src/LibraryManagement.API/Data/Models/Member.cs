@@ -2,6 +2,8 @@
 
 namespace LibraryManagement.API.Data.Models
 {
+
+    //Anemic Domain Model
     public class Member
     {
         public Guid Id { get; set; }
