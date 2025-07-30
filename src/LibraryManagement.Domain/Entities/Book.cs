@@ -10,6 +10,7 @@ namespace LibraryManagement.Domain.Entities
         public BookId Id { get; set; }
         public string Title { get; set; }
         public bool IsBorrowed { get; set; }
+        public List<BorrowingRecord> BorrowingHistory { get; set; }
 
         public void MarkAsBorrowed()
         {
