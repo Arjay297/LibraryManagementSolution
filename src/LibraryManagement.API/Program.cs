@@ -1,10 +1,7 @@
-
-using LibraryManagement.API.Configurations;
-using LibraryManagement.API.Data;
-using LibraryManagement.API.Repositories;
-using LibraryManagement.API.Services;
+using LibraryManagement.Application;
+using LibraryManagement.Infrastructure;
+using LibraryManagement.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,46 +35,12 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-builder.Services.AddScoped<IMemberService, MemberService>();
-builder.Services.AddScoped<IMemberRepository, MemberRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-builder.Services.AddScoped<IPasswordService, PasswordService>();
-builder.Services.AddScoped<ITokenService, TokenService>();
 
-builder.Services.AddDbContext<ApplicationDbContext>(o =>
-{
-    o.UseSqlServer(builder.Configuration
-        .GetConnectionString("DefaultConnection"));
-});
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication();
 
 
-JwtSettings jwtSettings = new JwtSettings();
-builder.Configuration.Bind("JwtSettings", jwtSettings);
-builder.Services.AddSingleton(jwtSettings);
-builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer("Bearer", options =>
-    {
-        TokenValidationParameters tokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtSettings.Issuer,
-            ValidAudience = jwtSettings.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtSettings.Key))
-        };
-
-        options.TokenValidationParameters = tokenValidationParameters;
-    });
-
-
-builder.Services.AddAutoMapper(s =>
-{
-    s.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
-
-});
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 

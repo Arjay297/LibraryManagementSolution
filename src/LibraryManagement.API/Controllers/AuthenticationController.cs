@@ -1,10 +1,6 @@
-﻿using LibraryManagement.API.Data.Models;
-using LibraryManagement.API.Dtos.Request;
-using LibraryManagement.API.Dtos.Response;
-using LibraryManagement.API.Services;
+﻿using LibraryManagement.API.Request;
+using LibraryManagement.Application.Commands;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Razor;
-using System.Security.Claims;
 
 
 namespace LibraryManagement.API.Controllers
@@ -13,16 +9,21 @@ namespace LibraryManagement.API.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthenticationCommandService _authenticationService;
+        private readonly IBorrowingCommandService _borrowingCommandService;
 
-        public AuthenticationController(IAuthenticationService authenticationService)
+        public AuthenticationController(IAuthenticationCommandService authenticationService,
+            IBorrowingCommandService borrowingCommandService)
         {
             _authenticationService = authenticationService;
+            _borrowingCommandService = borrowingCommandService;
+            
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
         {
+            
             var response =
                 await _authenticationService.RegisterAsync(request.Name, request.Email, request.Password);
             return Ok(response);

@@ -1,9 +1,9 @@
 ﻿using FluentResults;
-using LibraryManagement.API.Data.Models;
-using LibraryManagement.API.Dtos.Request;
-using LibraryManagement.API.Dtos.Response;
-using LibraryManagement.API.Errors;
-using LibraryManagement.API.Services;
+using LibraryManagement.API.Request;
+using LibraryManagement.Application.Commands;
+using LibraryManagement.Application.Errors;
+using LibraryManagement.Application.Response;
+using LibraryManagement.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.API.Controllers
@@ -13,8 +13,8 @@ namespace LibraryManagement.API.Controllers
     public class MembersController : ControllerBase
     {
 
-        private IMemberService _memberService;
-        public MembersController(IMemberService memberService)
+        private IMemberCommandService _memberService;
+        public MembersController(IMemberCommandService memberService)
         {
             _memberService = memberService;
         }
