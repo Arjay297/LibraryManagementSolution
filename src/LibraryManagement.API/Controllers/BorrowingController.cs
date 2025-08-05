@@ -10,9 +10,9 @@ namespace LibraryManagement.API.Controllers
     [ApiController]
     public class BorrowingController : ControllerBase
     {
-        private readonly IBorrowingCommandService _borrowingService;
+        private readonly IBorrowingCommands _borrowingService;
 
-        public BorrowingController(IBorrowingCommandService borrowingCommandService)
+        public BorrowingController(IBorrowingCommands borrowingCommandService)
         {
             _borrowingService = borrowingCommandService;
         }

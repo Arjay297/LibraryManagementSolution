@@ -7,10 +7,26 @@ namespace LibraryManagement.Domain.Entities
 {
     public class Book
     {
-        public BookId Id { get; set; }
-        public string Title { get; set; }
-        public bool IsBorrowed { get; set; }
-        public List<BorrowingRecord> BorrowingHistory { get; set; }
+        public BookId Id { get; private set; } = null!;
+        public string Title { get; private set; } = null!;
+        public bool IsBorrowed { get; private set; }
+        public List<BorrowingRecord> BorrowingHistory { get; set; } = [];
+
+
+        protected Book()
+        {
+            
+        }
+
+        public static Book Create(string title)
+        {  
+            return new Book
+            {
+                Id = new BookId(Guid.NewGuid()),
+                Title = title,
+                IsBorrowed = false
+            };
+        }
 
         public void MarkAsBorrowed()
         {

@@ -9,11 +9,11 @@ using LibraryManagement.Domain.ValueObjects;
 
 namespace LibraryManagement.Application.CommandHandler
 {
-    public class BorrowingCommandService : IBorrowingCommandService
+    public class BorrowingCommands : IBorrowingCommands
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public BorrowingCommandService(IUnitOfWork unitOfWork)
+        public BorrowingCommands(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -40,9 +40,9 @@ namespace LibraryManagement.Application.CommandHandler
             {
                 return Result.Fail(new BookAlreadyBorrowedError());
             } 
-            catch (MemberCantBorrowedMoreThanAllowedException)
+            catch (MemberCantBorrowedMoreThanAllowedException ex)
             {
-                return Result.Fail(new MemberCantBorrowedMoreThanAllowedError());
+                return Result.Fail(new MemberCantBorrowedMoreThanAllowedError(ex.Message));
             }
             
         }
@@ -56,6 +56,9 @@ namespace LibraryManagement.Application.CommandHandler
                     .BorrowingRecords
                     .GetByMemberAndBookIdAsync(new BookId(bookId), new MemberId(memberId));
 
+                if(record is null)
+                    return Result.Fail(new EntityNotFoundError($"Borrowing record not found for book {bookId} and member {memberId}"));
+
                 var borrowingService = new BorrowingService();
                 borrowingService.ProcessReturn(record);
 
@@ -65,11 +68,7 @@ namespace LibraryManagement.Application.CommandHandler
             catch (BookAlreadyReturnedException)
             {
                 return Result.Fail(new BookAlreadyBorrowedError());
-            }
-            catch (MemberCantBorrowedMoreThanAllowedException)
-            {
-                return Result.Fail(new MemberCantBorrowedMoreThanAllowedError());
-            }
+            }     
         }
     }
 }

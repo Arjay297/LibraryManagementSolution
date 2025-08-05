@@ -7,7 +7,7 @@ using LibraryManagement.Domain.ValueObjects;
 
 namespace LibraryManagement.Application.CommandHandler
 {
-    public class AuthenticationCommandService : IAuthenticationCommandService
+    public class AuthenticationCommands : IAuthenticationCommands
     {
 
         private readonly IPasswordService _passwordService;
@@ -15,7 +15,7 @@ namespace LibraryManagement.Application.CommandHandler
         private readonly ITokenService _tokenService;
 
 
-        public AuthenticationCommandService(
+        public AuthenticationCommands(
             IPasswordService passwordService,
             ITokenService tokenService,
             IUnitOfWork unitOfWork)
@@ -78,7 +78,8 @@ namespace LibraryManagement.Application.CommandHandler
             {
                 Id = new MemberId(user.Id.Value),
                 Name = user.Name,
-                Email = user.Email
+                Email = user.Email,
+                MaxBook = 3
             };
             await _unitOfWork.Members.AddAsync(member);
 

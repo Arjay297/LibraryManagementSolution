@@ -1,9 +1,11 @@
 ﻿using LibraryManagement.API.Repositories;
+using LibraryManagement.Application.Queries;
 using LibraryManagement.Application.Services;
 using LibraryManagement.Domain.Repositories;
 using LibraryManagement.Infrastructure.Configurations;
 using LibraryManagement.Infrastructure.Data;
 using LibraryManagement.Infrastructure.Data.Repositories;
+using LibraryManagement.Infrastructure.QueryHandlers;
 using LibraryManagement.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,8 +23,7 @@ namespace LibraryManagement.Infrastructure
 
             services.AddDbContext<ApplicationDbContext>(o =>
             {
-                o.UseSqlServer(configuration
-                    .GetConnectionString("DefaultConnection"));
+                o.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
 
             JwtSettings jwtSettings = new JwtSettings();
@@ -52,6 +53,10 @@ namespace LibraryManagement.Infrastructure
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            
+            //Queries
+            services.AddScoped<IMemberQueries, MemberQueries>();
+            services.AddScoped<IBookQueries, BookQueries>();
 
             //Services
             services.AddScoped<IPasswordService, PasswordService>();

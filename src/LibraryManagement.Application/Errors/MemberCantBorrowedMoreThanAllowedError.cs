@@ -2,7 +2,7 @@
 
 namespace LibraryManagement.Application.Errors
 {
-    public class MemberCantBorrowedMoreThanAllowedError : Error
+    public class MemberCantBorrowedMoreThanAllowedError(string message) : Error(message)
     {
     }
 }

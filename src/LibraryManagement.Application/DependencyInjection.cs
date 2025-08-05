@@ -9,10 +9,10 @@ namespace LibraryManagement.Application
 
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddScoped<IAuthenticationCommandService, AuthenticationCommandService>();
-            services.AddScoped<IMemberCommandService, MemberCommandService>();
-            services.AddScoped<IBookCommandService, BookCommandService>();
-            services.AddScoped<IBorrowingCommandService, BorrowingCommandService>();
+            services.AddScoped<IAuthenticationCommands, AuthenticationCommands>();
+            services.AddScoped<IMemberCommands, MemberCommands>();
+            services.AddScoped<IBookCommands, BookCommands>();
+            services.AddScoped<IBorrowingCommands, BorrowingCommands>();
             return services;
         }
     }

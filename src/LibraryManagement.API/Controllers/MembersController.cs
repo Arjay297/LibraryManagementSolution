@@ -1,7 +1,5 @@
-﻿using FluentResults;
-using LibraryManagement.API.Request;
-using LibraryManagement.Application.Commands;
-using LibraryManagement.Application.Errors;
+﻿using LibraryManagement.Application.Commands;
+using LibraryManagement.Application.Queries;
 using LibraryManagement.Application.Response;
 using LibraryManagement.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -13,42 +11,29 @@ namespace LibraryManagement.API.Controllers
     public class MembersController : ControllerBase
     {
 
-        private IMemberCommandService _memberService;
-        public MembersController(IMemberCommandService memberService)
+        private readonly IMemberQueries _queries;
+
+        public MembersController(IMemberQueries queries)
         {
-            _memberService = memberService;
+            _queries = queries;
         }
 
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Member>> GetMember(Guid id)
+        [HttpGet("{id}", Name = "GetMember")]
+        public async Task<ActionResult<MemberResponse>> GetMember(Guid id)
         {
-            var member = await _memberService.GetMemberAsync(id);
+            MemberResponse? member = await _queries.GetMemberByIdAsync(id);
             if (member is null)
                 return NotFound();
 
             return Ok(member);
         }
 
-        [HttpPost()]
-        public async Task<ActionResult<Member>> AddMember(CreateMemberRequest request)
+        [HttpGet]
+        public async Task<ActionResult<List<Member>>> GetMembers()
         {
-
-            MemberResponse response =  await _memberService.AddAsync(request.Name, request.Email);
-            
-            return Ok(response);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteMember(Guid id)
-        {
-            Result result = await _memberService.DeleteAsync(id);
-            if (result.HasError<EntityNotFoundError>(out var errors))
-                return NotFound(errors.FirstOrDefault()?.Message);
-            else if(result.HasError<DeleteNotPermittenHindiPaNagsasauli>(out var deleteErros))
-                return BadRequest(deleteErros.FirstOrDefault()?.Message);
-
-            return NoContent();
+            List<MemberResponse> members = await _queries.GetMembersAsync();
+            return Ok(members);
         }
     }
 }

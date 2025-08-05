@@ -8,12 +8,12 @@ namespace LibraryManagement.Domain.Entities
 
     public class Member
     {
-        public MemberId Id { get; set; }
+        public MemberId Id { get; set; } = null!;
         public required string Name { get; set; }
         public required string Email { get; set; }
         public int MaxBook { get; set; }
         public int BorrowedBookCount { get; set; }
-
+        public List<BorrowingRecord> BorrowingHistory { get; set; } = [];
         public void IncreaseBorrowedBookCount()
         {
             if (BorrowedBookCount >= MaxBook)

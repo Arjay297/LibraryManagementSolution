@@ -6,12 +6,12 @@ using LibraryManagement.Domain.Repositories;
 
 namespace LibraryManagement.Application.CommandHandler
 {
-    public class MemberCommandService : IMemberCommandService
+    public class MemberCommands : IMemberCommands
     {
         private readonly IMemberRepository _memberRepository;
 
 
-        public MemberCommandService(IMemberRepository memberRepository)
+        public MemberCommands(IMemberRepository memberRepository)
         {
             _memberRepository = memberRepository;
 

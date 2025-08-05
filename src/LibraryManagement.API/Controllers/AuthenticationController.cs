@@ -9,11 +9,11 @@ namespace LibraryManagement.API.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IAuthenticationCommandService _authenticationService;
-        private readonly IBorrowingCommandService _borrowingCommandService;
+        private readonly IAuthenticationCommands _authenticationService;
+        private readonly IBorrowingCommands _borrowingCommandService;
 
-        public AuthenticationController(IAuthenticationCommandService authenticationService,
-            IBorrowingCommandService borrowingCommandService)
+        public AuthenticationController(IAuthenticationCommands authenticationService,
+            IBorrowingCommands borrowingCommandService)
         {
             _authenticationService = authenticationService;
             _borrowingCommandService = borrowingCommandService;

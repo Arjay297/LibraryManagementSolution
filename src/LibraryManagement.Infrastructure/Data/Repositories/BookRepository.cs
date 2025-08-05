@@ -18,6 +18,11 @@ namespace LibraryManagement.Infrastructure.Data.Repositories
             await _context.Books.AddAsync(book);
         }
 
+        public void Delete(Book book)
+        {
+            _context.Books.Remove(book);
+        }
+
         public async Task<Book?> GetByIdAsync(BookId bookId)
         {
             return await _context.Books.FindAsync(bookId);
