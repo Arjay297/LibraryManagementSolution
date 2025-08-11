@@ -1,0 +1,62 @@
+﻿using Borrowing.Application.Commands;
+using Borrowing.Application.Errors;
+using FluentResults;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Borrowing.Controllers
+{
+    [Route("api/borrowing")]
+    [ApiController]
+    public class BorrowingController : ControllerBase
+    {
+        private readonly IBorrowingCommands _borrowingService;
+
+        public BorrowingController(IBorrowingCommands borrowingCommandService)
+        {
+            _borrowingService = borrowingCommandService;
+        }
+
+        [HttpPost("books/{bookId}")]
+        public async Task<ActionResult> BorrowBook(Guid bookId, [FromQuery] Guid borrowerId)
+        {
+            Result result = await _borrowingService.BorrowAsync(bookId, borrowerId, HttpContext.RequestAborted);
+            if (result.IsFailed)
+            {
+                var error = result.Errors.First();
+
+                return error switch
+                {
+                    EntityNotFoundError => NotFound(error.Message),
+                    BookAlreadyBorrowedError => Conflict(error.Message),
+                    MemberCantBorrowedMoreThanAllowedError => BadRequest(error.Message),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message)
+                };
+            }
+
+            return Ok();
+        }
+
+        [HttpPost("books/{bookId}/return")]
+        public async Task<ActionResult> ReturnBook(Guid bookId, [FromQuery] Guid borrowerId)
+        {
+            Result result = await _borrowingService.ReturnAsync(bookId, borrowerId, HttpContext.RequestAborted);
+            if (result.IsFailed)
+            {
+                var error = result.Errors.First();
+
+                return error switch
+                {
+                    EntityNotFoundError => NotFound(error.Message),
+                    BookAlreadyBorrowedError => Conflict(error.Message),
+                    MemberCantBorrowedMoreThanAllowedError => BadRequest(error.Message),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Message)
+                };
+            }
+
+            return Ok();
+        }
+
+   
+    }
+}

@@ -16,8 +16,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LibraryManagement.Application\LibraryManagement.Application.csproj" />
-    <ProjectReference Include="..\LibraryManagement.Infrastructure\LibraryManagement.Infrastructure.csproj" />
+    <ProjectReference Include="..\Borrowing\Borrowing.Controllers\Borrowing.Controllers.csproj" />
+    <ProjectReference Include="..\Borrowing\LibraryManagement.Application\Borrowing.Application.csproj" />
+    <ProjectReference Include="..\Borrowing\LibraryManagement.Infrastructure\Borrowing.Infrastructure.csproj" />
+    <ProjectReference Include="..\Identity\Identity.Application\Identity.Application.csproj" />
+    <ProjectReference Include="..\Identity\Identity.Controllers\Identity.Controllers.csproj" />
+    <ProjectReference Include="..\Identity\Identity.Infrastructure\Identity.Infrastructure.csproj" />
+    <ProjectReference Include="..\LibraryManagement.Contracts\LibraryManagement.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

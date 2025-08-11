@@ -1,12 +1,20 @@
-using LibraryManagement.Application;
-using LibraryManagement.Infrastructure;
-using LibraryManagement.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+using Borrowing.Application;
+using Borrowing.Controllers;
+using Borrowing.Infrastructure;
+using Identity.Application;
+using Identity.Controllers;
+using Identity.Infrastructure;
+using LibraryManagement.Contracts.Services;
+using LibraryManagement.SharedKernel;
 using Microsoft.OpenApi.Models;
+using Microsoft.VisualBasic;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(AuthenticationController).Assembly)
+    .AddApplicationPart(typeof(BooksController).Assembly);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -36,9 +44,23 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddApplication();
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(Borrowing.Application.AssemblyReference).Assembly);   
+    cfg.RegisterServicesFromAssembly(typeof(Identity.Application.AssemblyReference).Assembly);
+});
 
+//Identity
+builder.Services.AddIdentityApplication();
+builder.Services.AddIdentityInfrastructure(builder.Configuration);
+
+//Borrowing
+builder.Services.AddBorrowingInfrastructure(builder.Configuration);
+builder.Services.AddBorrowingApplication();
+
+
+builder.Services.AddScoped<IEventBus, EventBus>();
+builder.Services.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
